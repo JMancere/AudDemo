@@ -7,24 +7,30 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('SpotImages', {
+    await queryInterface.createTable('Fittings', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      url: {
-        type: Sequelize.STRING
-      },
-      preview: {
-        type: Sequelize.BOOLEAN
-      },
-      spotId: {
+      userId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        references: { model: 'Spots' },
+        references: { model: 'Users' },
         onDelete: 'CASCADE'
+      },
+      audiogramId: {
+        type: Sequelize.INTEGER,
+        references: { model: 'Audiograms' },
+        onDelete: 'CASCADE'
+      },
+      deviceId: {
+        type: Sequelize.INTEGER,
+        references: { model: 'Devices' },
+        onDelete: 'CASCADE'
+      },
+      fitName: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -39,7 +45,7 @@ module.exports = {
     }, options);
   },
   async down(queryInterface, Sequelize) {
-    options.tableName = "SpotImages";
+    options.tableName = "Fittings";
     await queryInterface.dropTable(options);
   }
 

@@ -1,4 +1,4 @@
-Fittings
+Fittings == Spot
 Devices == Booking
 Audiograms == Review
 
