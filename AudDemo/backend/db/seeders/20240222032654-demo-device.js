@@ -1,6 +1,6 @@
 'use strict';
 
-const { Booking } = require('../models');
+const { Device } = require('../models');
 let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
@@ -8,33 +8,27 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await Booking.bulkCreate([
+    await Device.bulkCreate([
       {
-        spotId: 1,
-        userId: 4,
-        startDate: Date(),
-        endDate: Date()
+        deviceName: "CIC",
+        volume: 50,
       },
       {
-        spotId: 2,
-        userId: 4,
-        startDate: Date(),
-        endDate: Date()
+        deviceName: "ITE",
+        volume: 80,
       },
       {
-        spotId: 3,
-        userId: 4,
-        startDate: Date(),
-        endDate: Date()
+        deviceName: "BTE",
+        volume: 100,
       },
     ], { validate: true });
   },
 
   async down (queryInterface, Sequelize) {
-    options.tableName = 'Bookings';
+    options.tableName = 'Devices';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      spotId: { [Op.in]: [1, 2, 3] }
+      volume: { [Op.in]: [50, 80, 100] }
     }, {});
   }
 };
