@@ -1,6 +1,6 @@
 Fittings
 Devices == Booking
-Audiograms
+Audiograms == Review
 
 
 user = user
