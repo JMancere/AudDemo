@@ -1,6 +1,31 @@
-Fittings == Spot
-Devices == Booking
-Audiograms == Review
-
-
 user = user
+
+Devices == Booking
+//- Get All Current Devices
+router.get('/all', requireAuth,
+//- Edit a device
+router.put('/:deviceId
+//- Delete a device
+router.delete('/:deviceId
+//- Add a device
+router.post('/:deviceId
+
+Audiograms == Review
+//- Get All Current Audiograms
+router.get('/all', requireAuth,
+//- Edit a device
+router.put('/:AudiogramsId
+//- Delete a device
+router.delete('/:AudiogramId
+//- Add a device
+router.post('/:AudiogramId
+
+Fittings == Spot
+//- Get All Current Fittings
+router.get('/current', requireAuth,
+//- Edit a Fitting
+router.put('/:FittingId
+//- Delete a Fitting
+router.delete('/:FittingId
+//- Add a Fitting
+router.post('/:AudiogramId
