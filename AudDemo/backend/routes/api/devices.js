@@ -8,3 +8,6 @@ const { body } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { stub } = require('../../utils/utils');
 const { Device } = require('../../db/models');
+
+
+module.exports = router;
