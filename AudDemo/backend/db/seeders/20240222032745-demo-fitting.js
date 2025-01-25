@@ -11,8 +11,8 @@ module.exports = {
     await Fitting.bulkCreate([
       {
         userId: 1,
-        userId: 1,
-        userId: 1,
+        audiogramId: 1,
+        deviceId: 1,
         fitName: 'test1',
       },
     ], { validate: true });

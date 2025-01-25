@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Audiogram.hasMany(models.Fittings, { foreignKey: 'audiogramId'});
+      Audiogram.hasMany(models.Fitting, { foreignKey: 'audiogramId'});
       Audiogram.belongsTo(
         models.User,
         { foreignKey: 'userId' }

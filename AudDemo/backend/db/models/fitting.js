@@ -13,10 +13,6 @@ module.exports = (sequelize, DataTypes) => {
       // Spot.hasOne(models.Review, { foreignKey: 'spotId'});
       // Spot.hasOne(models.Booking, { foreignKey: 'spotId'});
       // Spot.hasOne(models.SpotImage, { foreignKey: 'spotId'});
-      Audiogram.belongsTo(
-        models.User,
-        { foreignKey: 'userId' }
-      );
 
       Fitting.belongsTo(
         models.User,

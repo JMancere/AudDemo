@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       // User.hasMany(models.Spot, { foreignKey: 'ownerId'});
       // User.hasMany(models.Review, { foreignKey: 'userId'});
       // User.hasMany(models.Booking, { foreignKey: 'userId'});
+
       User.hasMany(models.Fitting, { foreignKey: 'userId'});
       User.hasMany(models.Audiogram, { foreignKey: 'userId'});
     }
