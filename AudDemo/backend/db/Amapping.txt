@@ -7,19 +7,19 @@ router.get('/all', requireAuth,
 router.delete('/:deviceId
 //- Edit a device
 router.put('/:deviceId
-
 //- Add a device
 router.post('/:deviceId
 
 Audiograms == Review
 //- Get All Current Audiograms
 router.get('/all', requireAuth,
+//- Add a device
+router.post('/:AudiogramId
+
 //- Edit a device
 router.put('/:AudiogramsId
 //- Delete a device
 router.delete('/:AudiogramId
-//- Add a device
-router.post('/:AudiogramId
 
 Fittings == Spot
 //- Get All Current Fittings
