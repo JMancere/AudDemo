@@ -3,10 +3,11 @@ user = user
 Devices == Booking
 //- Get All Current Devices
 router.get('/all', requireAuth,
-//- Edit a device
-router.put('/:deviceId
 //- Delete a device
 router.delete('/:deviceId
+//- Edit a device
+router.put('/:deviceId
+
 //- Add a device
 router.post('/:deviceId
 

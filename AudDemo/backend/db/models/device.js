@@ -29,7 +29,8 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'Device',
     defaultScope: {
       attributes: {
-        exclude: [, "id", "createdAt", "updatedAt"]
+        exclude: ["createdAt", "updatedAt"]
+        // exclude: [, "id", "createdAt", "updatedAt"]
       }
     },
     // scopes: {
