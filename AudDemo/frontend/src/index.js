@@ -5,14 +5,13 @@ import "./index.css";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { createBrowserRouter, RouterProvider, Navigate, Outlet } from 'react-router-dom';
-//import { BrowserRouter, createBrowserRouter, RouterProvider, Navigate, Outlet } from "react-router-dom";
 import { ModalProvider, Modal } from "./context/Modal";
 import App from "./App";
-import SpotDetail from './components/SpotDetail'
-import SpotNew from "./components/SpotNew";
-import Spots from "./components/Spots";
-import SpotManage from "./components/SpotManage";
-
+// import SpotDetail from './components/SpotDetail'
+// import SpotNew from "./components/SpotNew";
+ import Spots from "./components/Spots";
+// import SpotManage from "./components/SpotManage";
+import Mainpg from "./components/Mainpg";
 import configureStore from "./store";
 import { restoreCSRF, csrfFetch } from "./store/csrf";
 import * as sessionActions from "./store/session";
@@ -38,45 +37,96 @@ function AppLayout() {
 
 const router = createBrowserRouter([
   {
-    path: 'spots',
+    path: '',
     element: (<> <AppLayout />  </>)
     ,
     children: [
       {
         path: 'undefined',
-        element:<Navigate to='/spots' replace={true} />
+        element:<Navigate to='/' replace={true} />
       },
       {
         path: '',
-        element: <Spots />
+        element: <Mainpg />
       },
-      {
-        path: 'new',
-        element: <SpotNew />
-      },
-      {
-        path: ':id',
-        element: <SpotDetail />
-      },
-      {
-        path: 'current',
-        element: <SpotManage />
-      },
-      {
-        path: 'current/:id',
-        element: <SpotDetail doManage={true}/>
-      },
-      {
-        path: 'current/:id/edit',
-        element: <SpotNew doEdit={true}/>
-      },
+      // {
+      //   path: '',
+      //   element: <Spots />
+      // },
+
+
+      // {
+      //   path: '',
+      //   element: <Spots />
+      // },
+      // {
+      //   path: 'new',
+      //   element: <SpotNew />
+      // },
+      // {
+      //   path: ':id',
+      //   element: <SpotDetail />
+      // },
+      // {
+      //   path: 'current',
+      //   element: <SpotManage />
+      // },
+      // {
+      //   path: 'current/:id',
+      //   element: <SpotDetail doManage={true}/>
+      // },
+      // {
+      //   path: 'current/:id/edit',
+      //   element: <SpotNew doEdit={true}/>
+      // },
     ]
   },
   {
     path: '*',
-    element: <Navigate to='/spots' replace={true} />
+    element: <Navigate to='/main' replace={true} />
   }
 ]);
+// const router = createBrowserRouter([
+//   {
+//     path: 'spots',
+//     element: (<> <AppLayout />  </>)
+//     ,
+//     children: [
+//       {
+//         path: 'undefined',
+//         element:<Navigate to='/spots' replace={true} />
+//       },
+//       {
+//         path: '',
+//         element: <Spots />
+//       },
+//       {
+//         path: 'new',
+//         element: <SpotNew />
+//       },
+//       {
+//         path: ':id',
+//         element: <SpotDetail />
+//       },
+//       {
+//         path: 'current',
+//         element: <SpotManage />
+//       },
+//       {
+//         path: 'current/:id',
+//         element: <SpotDetail doManage={true}/>
+//       },
+//       {
+//         path: 'current/:id/edit',
+//         element: <SpotNew doEdit={true}/>
+//       },
+//     ]
+//   },
+//   {
+//     path: '*',
+//     element: <Navigate to='/spots' replace={true} />
+//   }
+// ]);
 
 // Wrap the application with the Modal provider and render the Modal component
 // after the App component so that all the Modal content will be layered as

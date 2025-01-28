@@ -5,6 +5,7 @@ import SpotItem from '../SpotItem';
 import './Spots.css';
 
 function Spots() {
+  return ;
   const dispatch = useDispatch();
 
   const spots = useSelector((store) => store.spots)
@@ -12,9 +13,6 @@ function Spots() {
   useEffect(() => {
     dispatch(getAllSpotsThunk());
   }, [dispatch]);
-
-
-  //console.log('spots===', spots);
 
   function getSL(){
     let res = [];

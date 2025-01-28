@@ -10,10 +10,6 @@ function SpotItem( {doManage, spot} ) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-//  "https://www.pinclipart.com/picdir/big/519-5193057_hut-clipart-wooden-house-wooden-house-clipart-png.png"
-//<image src= {spot.previewImage} alt={spot.previewImage}></image>
-//<img src="https://www.pinclipart.com/picdir/big/519-5193057_hut-clipart-wooden-house-wooden-house-clipart-png.png" height="30px" alt="preview"></img>
-
   const updateClick = (e) => {
     e.preventDefault()
     navigate(`${spot.id}/edit`);
