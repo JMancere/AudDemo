@@ -84,7 +84,7 @@ const validateCreate = [
   ];
 //REQ AUTH - Create a Audiogram
 router.post('/', requireAuth, validateCreate,
-  async (req, res) => {
+    async (req, res) => {
 
     const {f250, f500, f750, f1000, f1500, f2000, f3000, f4000, f6000, f8000} = req.body
     const audiogram = await Audiogram.create({
