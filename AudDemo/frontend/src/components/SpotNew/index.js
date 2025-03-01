@@ -179,7 +179,7 @@ const handleSubmit = (e) => {
     if (doEdit){
       return 'Update your Spot'
     } else
-      return 'Create a new Spot'
+      return 'Creatse a new Spot'
   }
 
   return <>

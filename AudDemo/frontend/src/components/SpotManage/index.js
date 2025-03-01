@@ -59,7 +59,7 @@ function SpotManage() {
       return "Manage Spots";
     } else
       return (
-        <Link to="/spots/new">Create a new spot</Link>
+        <Link to="/spots/new">Cxreate a new spot</Link>
       )
   }
 

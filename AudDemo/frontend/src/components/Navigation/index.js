@@ -12,9 +12,9 @@ function Navigation({ isLoaded }){
   return (
     <div className='navigator'>
       <NavLink className='bnb' to="/" >
-        <i className="fa-sharp fa-solid fa-m"></i>
-        <img src="https://www.pinclipart.com/picdir/big/519-5193057_hut-clipart-wooden-house-wooden-house-clipart-png.png" alt="Home" height='30px'/>
-        miniStay
+        {/* <i className="fa-sharp fa-solid fa-m"></i> */}
+        {/* <img src="https://www.pinclipart.com/picdir/big/519-5193057_hut-clipart-wooden-house-wooden-house-clipart-png.png" alt="Home" height='30px'/> */}
+        AudDemo
       </NavLink>
       <ul className="menu redBox" >
         {/* <li className="redBox menu" >

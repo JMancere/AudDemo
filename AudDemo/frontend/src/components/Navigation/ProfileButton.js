@@ -51,7 +51,7 @@ function ProfileButton({ user }) {
   function getLink(){
       return ( user &&
         <NavLink className='middle' to="/spots/new" >
-        Create a new spot
+        {/* Create a new spot */}
         </NavLink>
       )
   }
