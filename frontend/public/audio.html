@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sound Demo</title>
+</head>
+<body>
+  <button id="startButton">Start Tone</button>
+  <button id="stopButton">Stop Tone</button>
+
+  <script>
+    // Create an AudioContext instance
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    let oscillator;
+
+    document.getElementById('startButton').addEventListener('click', function() {
+      // If the AudioContext is suspended (due to browser policies), resume it.
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      // Create a new oscillator each time you start the tone.
+      oscillator = audioCtx.createOscillator();
+      oscillator.type = 'sine'; // You can change this to 'square', 'sawtooth', or 'triangle'
+      oscillator.frequency.setValueAtTime(1500, audioCtx.currentTime); // Set frequency to 440 Hz (A note)
+      oscillator.connect(audioCtx.destination);
+      oscillator.start();
+    });
+
+    document.getElementById('stopButton').addEventListener('click', function() {
+      // Stop the oscillator if it exists.
+      if (oscillator) {
+        oscillator.stop();
+        oscillator.disconnect();
+      }
+    });
+  </script>
+</body>
+</html>

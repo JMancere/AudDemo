@@ -59,7 +59,7 @@ function Mainpg() {
   }
 
   return (
-    < div className="container">
+    < div className="containerA">
       <div className="redBox header">
         <h1>Header. todo.</h1>
       </div>
