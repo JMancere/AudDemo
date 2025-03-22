@@ -42,7 +42,7 @@ export const getAllAudiogramsThunk = () => async (dispatch) => {
 
   if (response.ok){
     const data = await response.json();
-    console.log('SPOTS THUNK data', data)
+    console.log('Auds THUNK data', data)
     dispatch(getAllAudiograms(data.Audiograms));
   } else {
   }
