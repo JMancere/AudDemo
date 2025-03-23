@@ -313,9 +313,6 @@ function Audiogram({audiogram, Modes, Position}) {
 
   function GetOptions(){
 		const options = {
-      click: function(e){
-        alert(  'ccccccc');
-      },
     // width: 150,
       // height: 350,
 			animationEnabled: true,
