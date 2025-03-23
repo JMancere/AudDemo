@@ -23,13 +23,14 @@ function Mainpg() {
   const Mnormal = 0
   const MAddAudiogram = 1
 
-  const [mode, setMode] = useState(Mnormal);
+  const [mode, setMode] = useState({state: Mnormal} );
 
   const audiograms = useSelector((store) => store.audiograms)
   const sessionUser = useSelector(state => state.session.user);
   const validUser = !!useSelector(state => state.session.user)
 
   const [isLoaded, setIsLoaded] = useState(false);
+  const [selectedAud, setselectedAud] = useState()
 
   /*
     -1: uninit
@@ -66,14 +67,27 @@ function Mainpg() {
     console.log('SSSAVVVEEEE triggered')
   }
 
+  let audClick = (a) => {
+    // console.log('Aud click triggered', a)
+    if (a){
+      //Lt aud has been clicked.
+      //Set Mode for middle to display
+
+      console.log('Aud click ID =', a, a.id)
+      setselectedAud(a)
+    }
+  }
+
   const Modes = {
     doSave : Save,
-    M : mode
+    doAudClick : audClick,
+    M : mode,
+    haveSelected : false,
   }
 
   function getHeader(){
-    console.log('JEDAER AAGE STATEW', pageState)
-      console.log('!!!su, iL, vU, ps', sessionUser, isLoaded, validUser, pageState)
+    // console.log('JEDAER AAGE STATEW', pageState)
+    // console.log('!!!su, iL, vU, ps', sessionUser, isLoaded, validUser, pageState)
     if (pageState === 0){
       return <h1> Please log in or select a Demo User.</h1>
     } else if (pageState === 1) {
@@ -88,23 +102,50 @@ function Mainpg() {
 
 //////
   function doAddAud(){
-    console.log('addddddd clickec!!!')
+    console.log('add Audiogram clickec!!!')
     setMode(MAddAudiogram);
   }
 
   function getMain(){
-    console.log ('mainnnn get');
-    return <Audiogram key={0} audiogram={null} Modes={Modes} Position = {'main'}/>
+    // console.log('IN GET MAIN', selectedAud)
+    if (selectedAud) {
+      return <>
+         <h1>Selected audiogram</h1>
+
+        <Audiogram key={selectedAud.id} audiogram={selectedAud} Modes={Modes} Position = {'main'}/>
+      </>
+    }
+
+    //console.log ('mainnnn get');
+    //return <Audiogram key={0} audiogram={null} Modes={Modes} Position = {'main'}/>
   }
 
-  function getSL(){
+  // function selectAud(){
+  //   alert('selctAud clicked')
+  // }
+
+  function getAudSL(){
     let res = [];
     if (audiograms.audiograms && validUser){
       for (let audiogram in audiograms.audiograms){
+        //console.log('selcted Aud:::', mode.selectedAud)
+//        res.push(<Audiogram onClick={selectAud} key={audiograms.audiograms[audiogram].id} audiogram={audiograms.audiograms[audiogram]} Modes={Modes} Position = {'lt'}/>)
         res.push(<Audiogram key={audiograms.audiograms[audiogram].id} audiogram={audiograms.audiograms[audiogram]} Modes={Modes} Position = {'lt'}/>)
       }
     }
     return res ;
+  }
+
+  function getLtAuds(){
+    if (pageState === 0){
+      return <h1> </h1>
+    } else if (pageState === 1) {
+      return <>
+        <h1>Defined Audiograms</h1>
+        <button onClick={doAddAud}> Add audiogram</button>
+        {getAudSL()}
+        </>
+    }
   }
 
   return (
@@ -115,9 +156,10 @@ function Mainpg() {
       </div>
 
       <div className="redBox lt">
-        <h1>Defined Audiograms</h1>
+        {getLtAuds()}
+        {/* <h1>Defined Audiograms</h1>
         <button onClick={doAddAud}> Add audiogram</button>
-        {getSL()}
+        {getAudSL()} */}
       </div>
 
       <div className="redBox rt">
@@ -126,7 +168,7 @@ function Mainpg() {
       </div>
 
       <div className="redBox main">
-         <h1>MAIN</h1>
+         {/* <h1>MAIN</h1> */}
          {getMain()}
       </div>
   </div>
