@@ -33,7 +33,9 @@ function Audiogram({audiogram, Modes, Position}) {
   // useReducer(    setin250(audiogram.f250) )
   useEffect(() => {
     if (!init){
-      //audiogram.f250A = audiogram.f250;
+      //if (audiogram.id === 1){
+        console.log('AUd1 250 = ', audiogram.f250)
+      //}
       setin250(audiogram.f250)
       setin500(audiogram.f500)
       setin750(audiogram.f750)
@@ -184,9 +186,57 @@ function Audiogram({audiogram, Modes, Position}) {
   // }
 
   function testClick(){
+    function isNum(str) {
+      //if (typeof str === "number") return true;
+      //if (typeof str != "string") return false //If not string can't be number
+      return !isNaN(str) && // Use Type conversion to determine if it is a number
+             !isNaN(parseFloat(str))
+    }
+
     setinEdit(!inEdit);
 
     if (inEdit) {
+      //Changes may have ben made. trigger save
+      let aud = {}
+
+      // setin250(audiogram.f250)
+      // setin500(audiogram.f500)
+      // setin750(audiogram.f750)
+      // setin1000(audiogram.f1000)
+      // setin1500(audiogram.f1500)
+      // setin2000(audiogram.f2000)
+      // setin3000(audiogram.f3000)
+      // setin4000(audiogram.f4000)
+      // setin6000(audiogram.f6000)
+      // setin8000(audiogram.f8000)
+
+      if (audiogram){
+        aud.id = audiogram.id
+        aud.userId = audiogram.userId
+      }
+      if (isNum(in250))
+        aud.f250 = in250;
+      if (isNum(in500))
+        aud.f500 = in500;
+      if (isNum(in750))
+        aud.f750 = in750;
+      if (isNum(in1000))
+        aud.f1000 = in1000;
+      if (isNum(in1500))
+        aud.f1500 = in1500;
+      if (isNum(in2000))
+        aud.f2000 = in2000;
+      if (isNum(in3000))
+        aud.f3000 = in3000;
+      if (isNum(in4000))
+        aud.f4000 = in4000;
+      if (isNum(in6000))
+        aud.f6000 = in6000;
+      if (isNum(in8000))
+        aud.f800 = in8000;
+
+      Modes.doSave(aud)
+
       //Reinit
       //setin250(25)
       //We are editing. Show save button and edit boxes.
@@ -196,6 +246,7 @@ function Audiogram({audiogram, Modes, Position}) {
       // } else {
         //We are not editing show only edit button.
       //     return <button onClick={testClick}>Edit</button>
+    } else {
     }
 
 

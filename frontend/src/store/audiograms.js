@@ -3,7 +3,7 @@ import { csrfFetch } from "./csrf";
 const GET_AUDIOGRAMS = "audiograms/getAll";
 // const GET_SPOTDETAILS = "spots/getSpotDetails";
 // const ADD_SPOT = 'spots/addSpot';
-// const EDIT_SPOT = 'spots/editSpot';
+ const EDIT_AUDIOGRAM = 'spots/editAudiogram';
 // const DELETE_SPOT = 'spots/deleteSpot';
 // const DELETE_REVIEW = 'spots/deleteReview';
 // const ADD_REVIEW = 'spots/addReview';
@@ -23,12 +23,12 @@ const GET_AUDIOGRAMS = "audiograms/getAll";
 //   };
 // }
 
-// const editSpot = (spot) => {
-//   return {
-//     type: EDIT_SPOT,
-//     payload: spot
-//   };
-// }
+const editAudiogram = (audiogram) => {
+  return {
+    type: EDIT_AUDIOGRAM,
+    payload: audiogram
+  };
+}
 
 
 const getAllAudiograms = (audiograms) => {
@@ -48,6 +48,28 @@ export const getAllAudiogramsThunk = () => async (dispatch) => {
   }
   return response;
 };
+
+export const updateAudiogramThunk = (audiogram) => async (dispatch) => {
+
+  let response;
+  response = await csrfFetch(`/api/audiograms/${audiogram.id}`,
+    {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(audiogram)
+    }
+  );
+  if (response.ok){
+    const data = await response.json();
+    //console.log('SPOTS THUNK data', data)
+    dispatch(editAudiogram(data));
+  } else {
+  }
+  return response;
+
+}
+
+
 // const getAllSpots = (spots) => {
 //   return {
 //     type: GET_SPOTS,
@@ -114,26 +136,6 @@ export const getAllAudiogramsThunk = () => async (dispatch) => {
 //   return response;
 // }
 
-// export const updateSpotThunk = (spot) => async (dispatch) => {
-//   //console.log('UPDATING SPOT:::', spot);
-
-//   let response;
-//   response = await csrfFetch(`/api/spots/${spot.id}`,
-//     {
-//       method: 'PUT',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify(spot)
-//     }
-//   );
-//   if (response.ok){
-//     const data = await response.json();
-//     //console.log('SPOTS THUNK data', data)
-//     dispatch(editSpot(data));
-//   } else {
-//   }
-//   return response;
-
-// }
 
 // export const getCurrentSpotsThunk = () => async (dispatch) => {
 //   const response = await csrfFetch("/api/spots");
@@ -276,6 +278,10 @@ const audiogramsReducer = (state = initialState, action) => {
       action.payload.forEach(element => {
         newState.audiograms[element.id] = element
       });
+      return newState;
+    case EDIT_AUDIOGRAM:
+      if (!newState.audiograms) newState.audiograms = {}
+          newState.audiograms[action.payload.id] = action.payload;
       return newState;
 
     // case ADD_REVIEW:

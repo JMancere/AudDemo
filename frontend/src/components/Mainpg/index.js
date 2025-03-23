@@ -1,9 +1,11 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { useEffect, useState } from 'react';
-import { getAllAudiogramsThunk } from '../../store/audiograms';
+import { getAllAudiogramsThunk, updateAudiogramThunk } from '../../store/audiograms';
 // import SpotItem from '../SpotItem';
 import Audiogram from '../Audiogram/Audiogram';
 import * as sessionActions from "../../store/session";
+import { useNavigate } from "react-router-dom";
+
 
 import './Mainpg.css';
 
@@ -19,6 +21,7 @@ workflow:
 
 
 function Mainpg() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const Mnormal = 0
   const MAddAudiogram = 1
@@ -31,6 +34,7 @@ function Mainpg() {
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [selectedAud, setselectedAud] = useState()
+  const [changeMade, setchangeMade] = useState(0)
 
   /*
     -1: uninit
@@ -61,10 +65,37 @@ function Mainpg() {
       setpageState(1);
       dispatch(getAllAudiogramsThunk());
     }
-  }, [dispatch, isLoaded, validUser, pageState]);
+  }, [dispatch, isLoaded, validUser, pageState, changeMade]);
 
-  let Save = () => {
-    console.log('SSSAVVVEEEE triggered')
+  let Save = (audiogram) => {
+    console.log('Aud SAVE triggered : ', audiogram)
+    //need to reset errors on submit cause they need to be retried.
+    // setErrors('');
+
+
+    function isNumeric(str) {
+      if (typeof str != "string") return false //If not string can't be number
+      return !isNaN(str) && // Use Type conversion to determine if it is a number
+             !isNaN(parseFloat(str))
+    }
+
+    return dispatch(updateAudiogramThunk(audiogram))
+      .then(
+        () => {
+          // navigate(`/`);
+          //reset({id})
+          setchangeMade(changeMade+1)
+        }
+      ).catch(async (res) => {
+        //console.log('IN CATCH, ', res);
+        const data = await res.json();
+
+        //console.log('EL errors::', data.errors)
+        if (data && data.errors) {
+          return audiogram;
+          // return spot.Owner;
+        }
+      });
   }
 
   let audClick = (a) => {
@@ -128,9 +159,9 @@ function Mainpg() {
     let res = [];
     if (audiograms.audiograms && validUser){
       for (let audiogram in audiograms.audiograms){
-        //console.log('selcted Aud:::', mode.selectedAud)
+        //console.log('selcted Aud:::', audiograms.audiograms[audiogram])
 //        res.push(<Audiogram onClick={selectAud} key={audiograms.audiograms[audiogram].id} audiogram={audiograms.audiograms[audiogram]} Modes={Modes} Position = {'lt'}/>)
-        res.push(<Audiogram key={audiograms.audiograms[audiogram].id} audiogram={audiograms.audiograms[audiogram]} Modes={Modes} Position = {'lt'}/>)
+        res.push(<Audiogram key={audiograms.audiograms[audiogram].id+(changeMade*1000)} audiogram={audiograms.audiograms[audiogram]} Modes={Modes} Position = {'lt'}/>)
       }
     }
     return res ;
