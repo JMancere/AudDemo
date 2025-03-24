@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { useEffect, useState } from 'react';
-import { getAllAudiogramsThunk, updateAudiogramThunk } from '../../store/audiograms';
+import { getAllAudiogramsThunk, updateAudiogramThunk, createAudiogramThunk, deleteAudiogramThunk } from '../../store/audiograms';
 // import SpotItem from '../SpotItem';
 import Audiogram from '../Audiogram/Audiogram';
 import * as sessionActions from "../../store/session";
@@ -8,17 +8,6 @@ import { useNavigate } from "react-router-dom";
 
 
 import './Mainpg.css';
-
-/*
-workflow:
- state:
-  0. No user logged in
-    No devices loaded,
-    No audiograms loaded.
-    Set Log in message.
-*/
-
-
 
 function Mainpg() {
   const navigate = useNavigate();
@@ -47,17 +36,6 @@ function Mainpg() {
     dispatch(sessionActions.restoreUser()).then(() => setIsLoaded(true));
     //  console.log('su, iL, vU', sessionUser, isLoaded, validUser)
 
-//    if (isLoaded && pageState === -1){
-    // if (isLoaded){
-    //   if (validUser){
-    //     console.log('Setting page 0')
-    //     setpageState(0)
-    //   } else {
-    //     console.log('Setting page 1')
-    //     setpageState(1);
-    //   }
-    // }
-
     if (isLoaded && !validUser){
       setpageState(0);
     }
@@ -67,16 +45,47 @@ function Mainpg() {
     }
   }, [dispatch, isLoaded, validUser, pageState, changeMade]);
 
+
+  const deleteClick = (audiogram) => {
+    // console.log('Aud DELETE triggered : ', audiogram)
+    dispatch(deleteAudiogramThunk(audiogram.id)).then();
+    setselectedAud(null)
+  }
+
   let Save = (audiogram) => {
     console.log('Aud SAVE triggered : ', audiogram)
     //need to reset errors on submit cause they need to be retried.
     // setErrors('');
 
-
+    console.log('savinf ::: ', audiogram)
     function isNumeric(str) {
       if (typeof str != "string") return false //If not string can't be number
       return !isNaN(str) && // Use Type conversion to determine if it is a number
              !isNaN(parseFloat(str))
+    }
+
+    if (!audiogram.id ) {
+      //console.log('saving A: ', audiogram)
+      //saving new.
+
+
+      return dispatch(createAudiogramThunk(audiogram))
+      .then(
+        () => {
+          // navigate(`/`);
+          //reset({id})
+          setchangeMade(changeMade+1)
+        }
+      ).catch(async (res) => {
+        //console.log('IN CATCH, ', res);
+        const data = await res.json();
+
+        //console.log('EL errors::', data.errors)
+        if (data && data.errors) {
+          return audiogram;
+          // return spot.Owner;
+        }
+      });
     }
 
     return dispatch(updateAudiogramThunk(audiogram))
@@ -104,7 +113,9 @@ function Mainpg() {
       //Lt aud has been clicked.
       //Set Mode for middle to display
 
-      console.log('Aud click ID =', a, a.id)
+      console.log('Aud click ID =', a.id, a)
+      setMode(Mnormal);
+
       setselectedAud(a)
     }
   }
@@ -113,6 +124,7 @@ function Mainpg() {
     doSave : Save,
     doAudClick : audClick,
     M : mode,
+    doDelete : deleteClick,
     haveSelected : false,
   }
 
@@ -134,12 +146,31 @@ function Mainpg() {
 //////
   function doAddAud(){
     console.log('add Audiogram clickec!!!')
-    setMode(MAddAudiogram);
+    //setMode(MAddAudiogram);
+    setselectedAud(-1)
   }
 
   function getMain(){
     // console.log('IN GET MAIN', selectedAud)
     if (selectedAud) {
+      if (selectedAud === -1) {
+        let aud = {}
+        aud.f250 = '';
+        aud.f500 = '';
+        aud.f750 = '';
+        aud.f1000 = '';
+        aud.f1500 = '';
+        aud.f2000 = '';
+        aud.f3000 = '';
+        aud.f4000 = '';
+        aud.f6000 = '';
+        aud.f800 = '';
+
+       return <>
+            <h1>NEW audiogram</h1>
+          <Audiogram key={-1} audiogram={aud} Modes={Modes} Position = {'main'}/>
+        </>
+      }
       return <>
          <h1>Selected audiogram</h1>
 
@@ -148,12 +179,7 @@ function Mainpg() {
     }
 
     //console.log ('mainnnn get');
-    //return <Audiogram key={0} audiogram={null} Modes={Modes} Position = {'main'}/>
   }
-
-  // function selectAud(){
-  //   alert('selctAud clicked')
-  // }
 
   function getAudSL(){
     let res = [];

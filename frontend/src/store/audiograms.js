@@ -2,9 +2,9 @@ import { csrfFetch } from "./csrf";
 
 const GET_AUDIOGRAMS = "audiograms/getAll";
 // const GET_SPOTDETAILS = "spots/getSpotDetails";
-// const ADD_SPOT = 'spots/addSpot';
- const EDIT_AUDIOGRAM = 'spots/editAudiogram';
-// const DELETE_SPOT = 'spots/deleteSpot';
+ const ADD_AUDIOGRAM = 'audiograms/addAudiogram';
+ const EDIT_AUDIOGRAM = 'audiograms/editAudiogram';
+ const DELETE_AUDIOGRAM = 'audiograms/deleteAudiogram';
 // const DELETE_REVIEW = 'spots/deleteReview';
 // const ADD_REVIEW = 'spots/addReview';
 // const GET_SPOTSCURRENT = 'spots/getSpotsCurrent';
@@ -16,12 +16,12 @@ const GET_AUDIOGRAMS = "audiograms/getAll";
 //   };
 // }
 
-// const deleteSpot = (spotID) => {
-//   return {
-//     type: DELETE_SPOT,
-//     payload: spotID
-//   };
-// }
+const deleteAudiogram = (audiogramID) => {
+  return {
+    type: DELETE_AUDIOGRAM,
+    payload: audiogramID
+  };
+}
 
 const editAudiogram = (audiogram) => {
   return {
@@ -69,6 +69,55 @@ export const updateAudiogramThunk = (audiogram) => async (dispatch) => {
 
 }
 
+const addAudiogram = (audiogram) => {
+  return {
+    type: ADD_AUDIOGRAM,
+    payload: {audiogram},
+  };
+}
+
+export const createAudiogramThunk = (audiogram) => async (dispatch) => {
+  //console.log('CREATING SPOT:::', spot);
+
+  let response;
+  response = await csrfFetch("/api/audiograms/",
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(audiogram)
+    }
+  );
+
+  if (response.ok){
+    const data = await response.json();
+    dispatch(addAudiogram(data));
+    //console.log('adadaddadad', data)
+  } else {
+  }
+
+  return response;
+};
+
+export const deleteAudiogramThunk = (audiogramId) => async (dispatch) => {
+  //console.log('Deleting SPOT:::', spotId);
+
+  let response;
+  response = await csrfFetch(`/api/audiograms/${audiogramId}`,
+    {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: null
+    }
+  );
+  if (response.ok){
+    //const data = await response.json();
+    await response.json();
+    //console.log('SPOTS DELETED data', data)
+    dispatch(deleteAudiogram(audiogramId));
+  } else {
+  }
+  return response;
+}
 
 // const getAllSpots = (spots) => {
 //   return {
@@ -282,6 +331,15 @@ const audiogramsReducer = (state = initialState, action) => {
     case EDIT_AUDIOGRAM:
       if (!newState.audiograms) newState.audiograms = {}
           newState.audiograms[action.payload.id] = action.payload;
+      return newState;
+    case ADD_AUDIOGRAM:
+      if (!newState.audiograms) newState.audiograms = {}
+      newState.audiograms[action.payload.audiogram.id] = action.payload;
+      return newState;
+    case DELETE_AUDIOGRAM:
+      if (newState.audiograms && newState.audiograms[action.payload]) {
+        delete newState.audiograms[action.payload];
+      }
       return newState;
 
     // case ADD_REVIEW:

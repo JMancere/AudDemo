@@ -33,8 +33,10 @@ function Audiogram({audiogram, Modes, Position}) {
   // useReducer(    setin250(audiogram.f250) )
   useEffect(() => {
     if (!init){
+      console.log('init A aud ==', Position, audiogram)
+
       //if (audiogram.id === 1){
-        console.log('AUd1 250 = ', audiogram.f250)
+//        console.log('AUd1 250 = ', audiogram.f250)
       //}
       setin250(audiogram.f250)
       setin500(audiogram.f500)
@@ -164,16 +166,17 @@ function Audiogram({audiogram, Modes, Position}) {
           </>)
       } else {
         //We are not editing show only edit button.
-        return <button onClick={testClick}>Edit</button>
+        return (<>
+          <button onClick={testClick}>Edit</button>
+          {getDel()}
+        </>)
       }
     }
-
-
-    if (Modes.M === MAddAudiogram && Position === 'main') {
-      return <button onClick={Modes.doSave}> Do save!</button>
+    function getDel(){
+      if (audiogram.id)
+        return <button onClick={delClick}>Delete</button>
     }
-    // console.log('gb', Position)
-    // return <button onClick={testClick}> Test !</button>
+
     return <></>
   }
 
@@ -185,10 +188,12 @@ function Audiogram({audiogram, Modes, Position}) {
   //     }
   // }
 
+  function delClick(){
+    Modes.doDelete(audiogram)
+  }
+
   function testClick(){
     function isNum(str) {
-      //if (typeof str === "number") return true;
-      //if (typeof str != "string") return false //If not string can't be number
       return !isNaN(str) && // Use Type conversion to determine if it is a number
              !isNaN(parseFloat(str))
     }
@@ -199,21 +204,24 @@ function Audiogram({audiogram, Modes, Position}) {
       //Changes may have ben made. trigger save
       let aud = {}
 
-      // setin250(audiogram.f250)
-      // setin500(audiogram.f500)
-      // setin750(audiogram.f750)
-      // setin1000(audiogram.f1000)
-      // setin1500(audiogram.f1500)
-      // setin2000(audiogram.f2000)
-      // setin3000(audiogram.f3000)
-      // setin4000(audiogram.f4000)
-      // setin6000(audiogram.f6000)
-      // setin8000(audiogram.f8000)
-
       if (audiogram){
         aud.id = audiogram.id
         aud.userId = audiogram.userId
       }
+
+      //console.log('in save in250 in', aud.f250, in250)
+
+      aud.f250 = null;
+      aud.f500 = null;
+      aud.f750 = null;
+      aud.f1000 = null;
+      aud.f1500 = null;
+      aud.f2000 = null;
+      aud.f3000 = null;
+      aud.f4000 = null;
+      aud.f6000 = null;
+      aud.f800 = null;
+
       if (isNum(in250))
         aud.f250 = in250;
       if (isNum(in500))
@@ -233,19 +241,9 @@ function Audiogram({audiogram, Modes, Position}) {
       if (isNum(in6000))
         aud.f6000 = in6000;
       if (isNum(in8000))
-        aud.f800 = in8000;
+        aud.f8000 = in8000;
 
       Modes.doSave(aud)
-
-      //Reinit
-      //setin250(25)
-      //We are editing. Show save button and edit boxes.
-      //   return (
-      //     <button onClick={testClick}>Save</button>
-      //   )
-      // } else {
-        //We are not editing show only edit button.
-      //     return <button onClick={testClick}>Edit</button>
     } else {
     }
 
@@ -269,7 +267,8 @@ function Audiogram({audiogram, Modes, Position}) {
   function getPts(test){
     let dp = [];
     let haveAllNulls = false;
-    if (!audiogram || (Modes.M === MAddAudiogram && Position === 'main')) {
+    //if (!audiogram || (Modes.M === MAddAudiogram && Position === 'main')) {
+    if (!audiogram && Position === 'main') {
       dp.push({x: 0, y: null,label: "250"})
       dp.push({x: 1, y: null,label: "500"})
       dp.push({x: 1.5, y: null,label: "750"})
@@ -402,9 +401,10 @@ function Audiogram({audiogram, Modes, Position}) {
   // }
 
   function divClick(a, b, c, d){
-    if (Position !== 'main')
+    if (Position !== 'main') {
+      console.log('triggering a.js doaudclick with ', audiogram)
       Modes.doAudClick(audiogram)
-
+    }
     // if (onclick){
     //   (onclick(a))
     // }
