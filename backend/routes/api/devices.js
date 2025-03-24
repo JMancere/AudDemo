@@ -10,6 +10,32 @@ const { stub } = require('../../utils/utils');
 const { Device } = require('../../db/models');
 
 
+router.get('/',
+  async (req, res) => {
+    let devices = await Device.findAll(
+        {
+         //  limit: size,
+         //  offset: size * (page - 1),
+         //  include: ['Reviews', 'SpotImages'],
+        }
+    );
+    if (devices){
+       //  const options = {previewImage: true, avgRating: true};
+       //  calcPreviewAndAvgReview(spots, options);
+
+       //  //Remove spotimages and reviews from resultset.
+       //  spots.forEach(spot => {
+       //      delete spot.dataValues.SpotImages
+       //      delete spot.dataValues.Reviews
+       //  });
+    }
+    const Devices = devices;
+    return res.json({
+        Devices,
+    });
+  }
+ )
+
  router.get('/all',
  async (req, res) => {
    let devices = await Device.findAll(

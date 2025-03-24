@@ -3,11 +3,12 @@ import thunk from "redux-thunk";
  import sessionReducer from "./session";
 // import spotsReducer from "./spots";
 import audiogramsReducer from "./audiograms";
-
+import devicesReducer from "./devices";
 const rootReducer = combineReducers({
   // add reducer functions here
   session: sessionReducer,
-  audiograms: audiogramsReducer
+  audiograms: audiogramsReducer,
+  devices: devicesReducer
 });
 
 let enhancer;

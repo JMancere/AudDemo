@@ -1,8 +1,10 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { useEffect, useState } from 'react';
 import { getAllAudiogramsThunk, updateAudiogramThunk, createAudiogramThunk, deleteAudiogramThunk } from '../../store/audiograms';
+import { getAllDevicesThunk, updateDeviceThunk, createDeviceThunk, deleteDeviceThunk } from '../../store/devices';
 // import SpotItem from '../SpotItem';
 import Audiogram from '../Audiogram/Audiogram';
+import Device from '../Device/Device';
 import * as sessionActions from "../../store/session";
 import { useNavigate } from "react-router-dom";
 
@@ -15,14 +17,17 @@ function Mainpg() {
   const Mnormal = 0
   const MAddAudiogram = 1
 
-  const [mode, setMode] = useState({state: Mnormal} );
+  const [modeA, setModeA] = useState({state: Mnormal} );
+  const [modeD, setModeD] = useState({state: Mnormal} );
 
   const audiograms = useSelector((store) => store.audiograms)
+  const devices = useSelector((store) => store.devices)
   const sessionUser = useSelector(state => state.session.user);
   const validUser = !!useSelector(state => state.session.user)
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [selectedAud, setselectedAud] = useState()
+  const [selectedDev, setselectedDev] = useState()
   const [changeMade, setchangeMade] = useState(0)
 
   /*
@@ -42,14 +47,62 @@ function Mainpg() {
     if (isLoaded && validUser){
       setpageState(1);
       dispatch(getAllAudiogramsThunk());
+      dispatch(getAllDevicesThunk());
     }
   }, [dispatch, isLoaded, validUser, pageState, changeMade]);
 
+
+  const deleteClickDev = (device) => {
+    // console.log('Aud DELETE triggered : ', audiogram)
+    dispatch(deleteDeviceThunk(device.id)).then();
+    setselectedDev(null)
+  }
 
   const deleteClick = (audiogram) => {
     // console.log('Aud DELETE triggered : ', audiogram)
     dispatch(deleteAudiogramThunk(audiogram.id)).then();
     setselectedAud(null)
+  }
+
+  let SaveDev = (device) => {
+    console.log('Dev SAVE triggered : ', device)
+    //need to reset errors on submit cause they need to be retried.
+    // setErrors('');
+
+    console.log('saving Dev ::: ', device)
+    if (!device.id ) {
+      //saving new.
+
+      return dispatch(createDeviceThunk(device))
+      .then(
+        () => {
+          setchangeMade(changeMade+1)
+        }
+      ).catch(async (res) => {
+        //console.log('IN CATCH, ', res);
+        const data = await res.json();
+
+        if (data && data.errors) {
+          return device;
+        }
+      });
+    }
+
+    return dispatch(updateDeviceThunk(device))
+      .then(
+        () => {
+          // navigate(`/`);
+          //reset({id})
+          setchangeMade(changeMade+1)
+        }
+      ).catch(async (res) => {
+        //console.log('IN CATCH, ', res);
+        const data = await res.json();
+
+        if (data && data.errors) {
+          return device;
+        }
+      });
   }
 
   let Save = (audiogram) => {
@@ -114,16 +167,39 @@ function Mainpg() {
       //Set Mode for middle to display
 
       console.log('Aud click ID =', a.id, a)
-      setMode(Mnormal);
+      setModeA(Mnormal);
 
       setselectedAud(a)
     }
   }
 
+  let devClick = (d) => {
+    // console.log('Aud click triggered', a)
+    if (d){
+      //Lt aud has been clicked.
+      //Set Mode for middle to display
+
+      console.log('Dev click ID =', d.id, d)
+      setModeD(Mnormal);
+
+      setselectedDev(d)
+    }
+  }
+
+  const ModesDev = {
+    doSave : SaveDev,
+    doDevClick : devClick,
+    M : modeD,
+    doDelete : deleteClickDev,
+    haveSelected : false,
+  }
+
+
+
   const Modes = {
     doSave : Save,
     doAudClick : audClick,
-    M : mode,
+    M : modeA,
     doDelete : deleteClick,
     haveSelected : false,
   }
@@ -143,14 +219,29 @@ function Mainpg() {
     // }
   }
 
-//////
+  //////
   function doAddAud(){
     console.log('add Audiogram clickec!!!')
     //setMode(MAddAudiogram);
     setselectedAud(-1)
   }
+  function doAddDev(){
+    console.log('add Device clicked!!!')
+    setselectedDev(-1)
+  }
 
   function getMain(){
+    function getdevs(){
+      if (selectedDev){
+
+        return <>
+          <h1>Selected Deivice</h1>
+          <Device key={selectedDev.id} device={selectedDev} Modes={ModesDev} Position = {'main'}/>
+        </>
+      }
+
+    }
+
     // console.log('IN GET MAIN', selectedAud)
     if (selectedAud) {
       if (selectedAud === -1) {
@@ -166,16 +257,17 @@ function Mainpg() {
         aud.f6000 = '';
         aud.f800 = '';
 
-       return <>
-            <h1>NEW audiogram</h1>
+       return (<>
+         <h1>NEW audiogram</h1>
           <Audiogram key={-1} audiogram={aud} Modes={Modes} Position = {'main'}/>
-        </>
+        </>)
       }
-      return <>
-         <h1>Selected audiogram</h1>
+      return (<>
+        {getdevs()}
 
+         <h1>Selected audiogram</h1>
         <Audiogram key={selectedAud.id} audiogram={selectedAud} Modes={Modes} Position = {'main'}/>
-      </>
+      </>)
     }
 
     //console.log ('mainnnn get');
@@ -185,9 +277,22 @@ function Mainpg() {
     let res = [];
     if (audiograms.audiograms && validUser){
       for (let audiogram in audiograms.audiograms){
-        //console.log('selcted Aud:::', audiograms.audiograms[audiogram])
+        // console.log('selcted Aud:::', audiograms.audiograms[audiogram])
 //        res.push(<Audiogram onClick={selectAud} key={audiograms.audiograms[audiogram].id} audiogram={audiograms.audiograms[audiogram]} Modes={Modes} Position = {'lt'}/>)
         res.push(<Audiogram key={audiograms.audiograms[audiogram].id+(changeMade*1000)} audiogram={audiograms.audiograms[audiogram]} Modes={Modes} Position = {'lt'}/>)
+      }
+    }
+    return res ;
+  }
+
+  function getDevSL(){
+    let res = [];
+    console.log('in getdevsl ', devices)
+    if (devices.devices && validUser){
+      for (let device in devices.devices){
+        let key = devices.devices[device].id;
+        // console.log('selcted Dev:::', key, devices.devices[device].id)
+        res.push(<Device key={key+(changeMade*1000)} device={devices.devices[device]} Modes={ModesDev} Position = {'rt'}/>)
       }
     }
     return res ;
@@ -205,27 +310,34 @@ function Mainpg() {
     }
   }
 
+  function getRtDevs(){
+    if (pageState === 0){
+      return <h1> </h1>
+    } else if (pageState === 1) {
+      return <>
+        <h1>Devices</h1>
+        <button onClick={doAddDev}> Add device</button>
+        {getDevSL()}
+        </>
+    }
+  }
+
   return (
     < div className="containerA">
       <div className="redBox header">
         {getHeader()}
-        {/* <h1>Header. todo.</h1> */}
       </div>
 
       <div className="redBox lt">
         {getLtAuds()}
-        {/* <h1>Defined Audiograms</h1>
-        <button onClick={doAddAud}> Add audiogram</button>
-        {getAudSL()} */}
       </div>
 
       <div className="redBox rt">
-        <h1>section RT</h1>
-        {/* {getSL()} */}
+        {/* <h1>section RT</h1> */}
+        {getRtDevs()}
       </div>
 
       <div className="redBox main">
-         {/* <h1>MAIN</h1> */}
          {getMain()}
       </div>
   </div>
